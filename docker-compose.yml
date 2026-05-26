@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: nerd-socialization-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app # 挂载当前目录到容器的 /app，实现热更新
+    environment:
+      - OPENAI_API_KEY=sk-vf5pnsyy9ajk8lgoqzjpnlsikdqsxnmzwaeo9t9skqr9zpdf6srgs5agheytq3o2 # 可选，可以在本地 .env 文件中配置
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: nerd-socialization-frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app # 挂载前端目录到容器的 /app
+      - /app/node_modules # 防止本地的 node_modules 覆盖容器内的
+    environment:
+      - CHOKIDAR_USEPOLLING=true # 在某些系统（如 Windows/WSL）下，确保文件改动能触发热更新
+    command: npm run dev -- --host 0.0.0.0

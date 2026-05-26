@@ -1,0 +1,15 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+# 复制 package.json 和 lock 文件
+COPY package.json package-lock.json* ./
+
+# 安装依赖，增加 --legacy-peer-deps 以避免某些依赖冲突导致安装失败，或者清理缓存
+RUN npm cache clean --force && npm install --registry=https://registry.npmmirror.com --legacy-peer-deps
+
+# 暴露 Vite 默认端口
+EXPOSE 5173
+
+# 启动命令（开发模式，允许从外部覆盖）
+CMD ["npm", "run", "dev", "--", "--host"]
