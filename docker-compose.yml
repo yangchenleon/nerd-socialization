@@ -12,7 +12,7 @@ services:
       - .:/app # 挂载当前目录到容器的 /app，实现热更新
     environment:
       - OPENAI_API_KEY=sk-vf5pnsyy9ajk8lgoqzjpnlsikdqsxnmzwaeo9t9skqr9zpdf6srgs5agheytq3o2 # 可选，可以在本地 .env 文件中配置
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
   frontend:
     build:
